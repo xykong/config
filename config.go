@@ -30,9 +30,11 @@ type Configuration interface {
 	GetByteList(path string) []byte
 	GetStringList(path string) []string
 	GetConfig(path string) Configuration
-	WithFallback(fallback Configuration)
+	WithFallback(fallback Configuration) Configuration
 	HasPath(path string) bool
 	Keys() []string
+
+	String() string
 }
 
 type Config struct {
@@ -79,6 +81,33 @@ func (p *Config) init(opts ...Option) {
 	} else {
 		p.Configuration = confFile
 	}
+
+	if p.Configuration == nil {
+		p.Configuration = p.configProvider.ParseString("")
+	}
+}
+
+func (p *Config) String() string {
+
+	if p.Configuration == nil {
+		return ""
+	}
+
+	return p.Configuration.String()
+}
+
+func (p *Config) WithFallback(fallback Configuration) Configuration {
+
+	if fallback == nil {
+		return p
+	}
+
+	if p.Configuration == nil {
+		return p
+	}
+
+	p.Configuration.WithFallback(fallback)
+	return p
 }
 
 func ConfigFile(fn string) Option {

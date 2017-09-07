@@ -22,8 +22,9 @@ func (p *HOCONConfiguration) GetConfig(path string) Configuration {
 	return &HOCONConfiguration{conf}
 }
 
-func (p *HOCONConfiguration) WithFallback(fallback Configuration) {
+func (p *HOCONConfiguration) WithFallback(fallback Configuration) Configuration {
 	p.Config.WithFallback(fallback.(*HOCONConfiguration).Config)
+	return p
 }
 
 func (p *HOCONConfiguration) Keys() []string {
