@@ -23,6 +23,10 @@ func (p *HOCONConfiguration) GetConfig(path string) Configuration {
 }
 
 func (p *HOCONConfiguration) WithFallback(fallback Configuration) Configuration {
+	if fallback == nil {
+		return p
+	}
+
 	p.Config.WithFallback(fallback.(*HOCONConfiguration).Config)
 	return p
 }
