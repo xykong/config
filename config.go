@@ -36,13 +36,14 @@ type Configuration interface {
 }
 
 type Config struct {
-	ConfigFile     string
-	ConfigString   string
-	config         Configuration
+	ConfigFile   string
+	ConfigString string
+
+	Configuration
 	configProvider ConfigurationProvider
 }
 
-func newConfig(opts ...Option) *Config {
+func NewConfig(opts ...Option) *Config {
 	conf := &Config{}
 	conf.init(opts...)
 	return conf
@@ -69,14 +70,14 @@ func (p *Config) init(opts ...Option) {
 
 	if confString != nil && confFile != nil {
 		confString.WithFallback(confFile)
-		p.config = confString
+		p.Configuration = confString
 		return
 	}
 
 	if confString != nil {
-		p.config = confString
+		p.Configuration = confString
 	} else {
-		p.config = confFile
+		p.Configuration = confFile
 	}
 }
 
