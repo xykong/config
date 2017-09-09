@@ -27,7 +27,7 @@ func (p *HOCONConfiguration) WithFallback(fallback Configuration) Configuration 
 		return p
 	}
 
-	p.Config.WithFallback(fallback.(*HOCONConfiguration).Config)
+	p.Config = p.Config.WithFallback(fallback.(*HOCONConfiguration).Config)
 	return p
 }
 

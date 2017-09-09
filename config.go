@@ -106,7 +106,15 @@ func (p *Config) WithFallback(fallback Configuration) Configuration {
 		return p
 	}
 
-	p.Configuration.WithFallback(fallback)
+	switch v := fallback.(type) {
+	case *Config:
+		{
+			return p.WithFallback(v.Configuration)
+		}
+	default:
+		p.Configuration = p.Configuration.WithFallback(v)
+	}
+
 	return p
 }
 
