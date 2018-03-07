@@ -33,6 +33,7 @@ type Configuration interface {
 	WithFallback(fallback Configuration) Configuration
 	HasPath(path string) bool
 	Keys() []string
+	IsEmpty() bool
 
 	String() string
 }
