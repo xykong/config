@@ -18,10 +18,15 @@ func NewHOCONConfiguration(conf *configuration.Config) Configuration {
 }
 
 func (p *HOCONConfiguration) GetConfig(path string) Configuration {
+	if p == nil || p.Config == nil {
+		return (*HOCONConfiguration)(nil)
+	}
+
 	conf := p.Config.GetConfig(path)
 	if conf == nil {
 		return (*HOCONConfiguration)(nil)
 	}
+
 	return &HOCONConfiguration{conf}
 }
 
