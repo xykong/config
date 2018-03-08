@@ -90,7 +90,7 @@ func (p *Config) init(opts ...Option) {
 
 func (p *Config) String() string {
 
-	if p.Configuration == nil {
+	if p == nil || p.Configuration == nil {
 		return ""
 	}
 
