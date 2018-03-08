@@ -193,6 +193,14 @@ func (p *HOCONConfiguration) IsEmpty() bool {
 	return p == nil || p.Config.IsEmpty()
 }
 
+func (p *HOCONConfiguration) String() string {
+	if p == nil || p.Config.IsEmpty() {
+		return ""
+	}
+
+	return p.Config.String()
+}
+
 type HOCONConfigProvider struct {
 }
 
