@@ -61,31 +61,24 @@ func (p *Config) init(opts ...Option) {
 		p.configProvider = &HOCONConfigProvider{}
 	}
 
+	conf := p.Configuration
+	if conf == nil {
+		conf = p.configProvider.ParseString("")
+	}
+
 	var confString, confFile Configuration
 
 	if len(p.ConfigFile) > 0 {
 		confFile = p.configProvider.LoadConfig(p.ConfigFile)
+		conf = conf.WithFallback(confFile)
 	}
 
 	if len(p.ConfigString) > 0 {
 		confString = p.configProvider.ParseString(p.ConfigString)
+		conf = conf.WithFallback(confString)
 	}
 
-	if confString != nil && confFile != nil {
-		confString.WithFallback(confFile)
-		p.Configuration = confString
-		return
-	}
-
-	if confString != nil {
-		p.Configuration = confString
-	} else {
-		p.Configuration = confFile
-	}
-
-	if p.Configuration == nil {
-		p.Configuration = p.configProvider.ParseString("")
-	}
+	p.Configuration = conf
 }
 
 func (p *Config) String() string {
@@ -128,6 +121,12 @@ func ConfigFile(fn string) Option {
 func ConfigString(str string) Option {
 	return func(o *Config) {
 		o.ConfigString = str
+	}
+}
+
+func WithConfig(conf Configuration) Option {
+	return func(o *Config) {
+		o.Configuration = conf
 	}
 }
 
