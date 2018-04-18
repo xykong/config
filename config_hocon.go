@@ -193,6 +193,14 @@ func (p *HOCONConfiguration) IsEmpty() bool {
 	return p == nil || p.Config.IsEmpty()
 }
 
+func (p *HOCONConfiguration) IsObject(path string) bool {
+	return p != nil && p.Config.IsObject(path)
+}
+
+func (p *HOCONConfiguration) IsArray(path string) bool {
+	return p != nil && p.Config.IsArray(path)
+}
+
 func (p *HOCONConfiguration) String() string {
 	if p == nil || p.Config.IsEmpty() {
 		return ""

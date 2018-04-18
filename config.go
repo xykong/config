@@ -34,6 +34,8 @@ type Configuration interface {
 	HasPath(path string) bool
 	Keys() []string
 	IsEmpty() bool
+	IsObject(path string) bool
+	IsArray(path string) bool
 
 	String() string
 }
