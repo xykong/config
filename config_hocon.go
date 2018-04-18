@@ -7,6 +7,10 @@ import (
 	"github.com/go-akka/configuration"
 )
 
+var (
+	_ Configuration = (*HOCONConfiguration)(nil)
+)
+
 type HOCONConfiguration struct {
 	*configuration.Config
 }
@@ -35,7 +39,17 @@ func (p *HOCONConfiguration) WithFallback(fallback Configuration) Configuration 
 		return p
 	}
 
-	p.Config = p.Config.WithFallback(fallback.(*HOCONConfiguration).Config)
+	switch v := fallback.(type) {
+	case *HOCONConfiguration:
+		{
+			p.Config = p.Config.WithFallback(v.Config)
+		}
+	case *Config:
+		{
+			p.Config = p.Config.WithFallback(v.Configuration.(*HOCONConfiguration).Config)
+		}
+	}
+
 	return p
 }
 
