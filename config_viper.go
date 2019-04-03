@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"math/big"
+	"os"
 	"time"
 
 	"github.com/spf13/viper"
@@ -292,21 +293,27 @@ func (p *ViperConfiguration) String() string {
 type ViperConfigProvider struct {
 }
 
-func (p *ViperConfigProvider) LoadConfig(filename string) Configuration {
+func (p *ViperConfigProvider) LoadConfig(name string) Configuration {
+
+	// initialize setting config
 	conf := viper.New()
-	conf.SetConfigName(filename)              // name of config file (without extension)
-	conf.SetConfigName(filename + ".default") // name of config file (without extension)
+	conf.SetConfigName(name + ".default")     // name of config file (without extension)
 	conf.AddConfigPath("configs/")            // path to look for the config file in
 	conf.AddConfigPath("./../configs/")       // path to look for the config file in
 	conf.AddConfigPath("./../../configs/")    // path to look for the config file in
 	conf.AddConfigPath("./../../../configs/") // path to look for the config file in
 	conf.AddConfigPath(".")                   // optionally look for config in the working directory
-	_ = conf.ReadInConfig()
 
-	//fmt.Fprintf(os.Stderr, "LoadConfig AllSettings: %v\n", conf.AllSettings())
-	//fmt.Fprintf(os.Stderr, "LoadConfig AllKeys: %v\n", conf.AllKeys())
-	//
-	//fmt.Fprintf(os.Stderr, "LoadConfig loveauth.hooks: %v\n", conf.Sub("loveauth.hooks"))
+	err := conf.ReadInConfig() // Find and read the config file
+	if err != nil {
+		_, _ = fmt.Fprintf(os.Stderr, "LoadConfig %s default value failed: %v\n", name, err)
+	}
+
+	conf.SetConfigName(name)   // name of config file (without extension)
+	err = conf.MergeInConfig() // Find and read the config file
+	if err != nil {
+		_, _ = fmt.Fprintf(os.Stderr, "LoadConfig %s failed: %v\n", name, err)
+	}
 
 	return NewViperConfiguration(conf)
 }
